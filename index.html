@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <link rel='stylesheet' type='text/css' href='css/jquery-ui-1.8.13.custom.css'/>
+    <link rel='stylesheet' type='text/css' href='css/fullcalendar.css'/>
+    <link rel='stylesheet' type='text/css' href='css/application.css'/>
+
+    <script type='text/javascript' src='js/vendor/jquery-1.7.1.min.js'></script>
+    <script type="text/javascript" src="js/vendor/jquery.couch.js"></script>
+    <script type='text/javascript' src='js/vendor/jquery-ui-1.8.13.custom.min.js'></script>
+    <script type='text/javascript' src='js/vendor/fullcalendar.min.js'></script>
+    <script type='text/javascript' src='js/vendor/underscore.js'></script>
+    <script type='text/javascript' src='js/vendor/backbone.js'></script>
+    <script type='text/javascript' src='js/vendor/backbone-couchdb.js'></script>
+    <script type='text/javascript' src='js/vendor/backbone.modelbinding.js'></script>
+    <script type='text/javascript' src='js/vendor/application.js'></script>
+  </head>
+  <body>
+    <div id='timesheets'></div>
+
+    <div id='eventDialog' class='dialog ui-helper-hidden'>
+      <form>
+        <div>
+          <div id='title'></div>
+        </div>
+        <div>
+          <label>Location:</label>
+          <select id='location' class="field" type="select"></select>
+        </div>
+        <div>
+          <label>Job:</label>
+          <select id='job' class="field" type="select"></select>
+        </div>
+        <div>
+          <h3>Hours:</h3>
+          <label>Supervisor:</label>
+          <input id='supervisor_hours' class="field" type="text" />
+          <label>Worker:</label>
+          <input id='worker_hours' class="field" type="text" />
+          <label>Worker Count:</label>
+          <input id='worker_count' class="field" type="text" />
+        </div>
+        <div>
+          <div>
+            <h3>Payment:</h3>
+            <input id='payment' class="field" type="text" />
+          </div>
+          <div>
+            <label>Paid:</label>
+            <input id='paid' class="field" type="checkbox" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

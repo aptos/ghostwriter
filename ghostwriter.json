@@ -1,0 +1,32 @@
+{ 
+    "jobs": {
+        "none":"-",
+        "harvest":"Harvest",
+        "leaf_pulling":"Leaf Pulling",
+        "pruning":"Pruning",
+        "spray":"Spray",
+        "thinning":"Thinning",
+        "weeds":"Weeds"
+      },
+      "colors": {
+        "none":"#CCCCCC",
+        "harvest":"#DDA0DD",
+        "leaf_pulling":"#FFA500",
+        "pruning":"#6A5ACD",
+        "spray":"#191970",
+        "thinning":"#32CD32",
+        "weeds":"#D2691E"
+      },
+      "locations": {
+        "none":"-",
+        "amaya_pinot":"Amaya Pinot",
+        "wilk":"Wilkerson",
+        "wdrf_pinot":"Woodruff Pinot",
+        "wdrf_north":"Woodruff North Block",
+        "wdrf_terraces":"Woodruff Terraces"
+      },
+      "rates": {
+        "supervisor": 15,
+        "worker": 12
+      }
+ }
