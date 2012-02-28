@@ -1,0 +1,37 @@
+<script type="text/template" id="timesheetsTemplate">
+  <div id='timesheets'>
+    <div id='eventDialog' class='dialog ui-helper-hidden'>
+      <h3>Timesheets</h3>
+      <form id='timesheet'>
+        <div>
+          <div id='title'></div>
+        </div>
+        <div>
+          <label>Location:</label>
+          <select name='location' class="field" type="select"></select>
+        </div>
+        <div>
+          <label>Job:</label>
+          <select name='job' class="field" type="select"></select>
+        </div>
+        <div>
+          <h3>Hours:</h3>
+          <label>Supervisor:</label>
+          <input name='supervisor_hours' class="field" type="text" />
+          <label>Worker:</label>
+          <input name='worker_hours' class="field" type="text" />
+          <label>Worker Count:</label>
+          <input name='worker_count' class="field" type="text" />
+        </div>
+        <div>
+          <div>
+            <h3>Payment:</h3>
+            <input name='payment' class="field" type="text" />
+            <input name='paid' class="field" type="checkbox" />
+            <span>(paid)</span>
+          </div>
+        </div>
+    </div>
+    </form>
+  </div>
+</script>

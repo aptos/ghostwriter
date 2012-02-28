@@ -11,45 +11,68 @@
     <script type='text/javascript' src='js/vendor/underscore.js'></script>
     <script type='text/javascript' src='js/vendor/backbone.js'></script>
     <script type='text/javascript' src='js/vendor/backbone-couchdb.js'></script>
-    <script type='text/javascript' src='js/vendor/backbone.modelbinding.js'></script>
-    <script type='text/javascript' src='js/vendor/application.js'></script>
+    <script type='text/javascript' src='js/application.js'></script>
   </head>
   <body>
-    <div id='timesheets'></div>
 
-    <div id='eventDialog' class='dialog ui-helper-hidden'>
-      <form>
-        <div>
-          <div id='title'></div>
+    <!-- Templates -->
+    <script type="text/template" id="timesheetsTemplate">
+      <div id='timesheets'>
+        <div id='eventDialog' class='dialog ui-helper-hidden'>
+          <h3>Timesheets</h3>
+          <form id='timesheet'>
+            <div>
+              <div id='title'></div>
+            </div>
+            <div>
+              <label>Location:</label>
+              <select name='location' class="field" type="select">
+                <% _.each(window.config.locations,function(value,key){ %>
+                <option value='<%= key %>'><%= value %></option>
+                <% }); %>
+              </select>
+            </div>
+            <div>
+              <label>Job:</label>
+              <select name='job' class="field" type="select">
+                <% _.each(window.config.jobs,function(value,key){ %>
+                <option value='<%= key %>'><%= value %></option
+                <% }); %>
+              </select>
+            </div>
+            <div>
+              <h3>Hours:</h3>
+              <label>Supervisor:</label>
+              <input name='supervisor_hours' class="field" type="text" />
+              <label>Worker:</label>
+              <input name='worker_hours' class="field" type="text" />
+              <label>Worker Count:</label>
+              <input name='worker_count' class="field" type="text" />
+            </div>
+            <div>
+              <div>
+                <h3>Payment:</h3>
+                <input name='payment' class="field" type="text" />
+                <input name='paid' class="field" type="checkbox" />
+                <span>(paid)</span>
+              </div>
+            </div>
         </div>
-        <div>
-          <label>Location:</label>
-          <select id='location' class="field" type="select"></select>
-        </div>
-        <div>
-          <label>Job:</label>
-          <select id='job' class="field" type="select"></select>
-        </div>
-        <div>
-          <h3>Hours:</h3>
-          <label>Supervisor:</label>
-          <input id='supervisor_hours' class="field" type="text" />
-          <label>Worker:</label>
-          <input id='worker_hours' class="field" type="text" />
-          <label>Worker Count:</label>
-          <input id='worker_count' class="field" type="text" />
-        </div>
-        <div>
-          <div>
-            <h3>Payment:</h3>
-            <input id='payment' class="field" type="text" />
-          </div>
-          <div>
-            <label>Paid:</label>
-            <input id='paid' class="field" type="checkbox" />
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
+    </script>
+
+    <script type="text/template" id="expensesTemplate">
+      <div id='expenses'>
+        <h3>Expenses</h3>
+      </div>
+    </script>
+
+    <div id="tabs">
+      <ul>
+        <li><a href="#expenses">Expenses</a></li>
+        <li><a href="#timesheets">Timesheets</a></li>
+      </ul>
     </div>
   </body>
 </html>

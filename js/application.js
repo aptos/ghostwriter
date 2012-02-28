@@ -74,6 +74,7 @@ $(function(){
       fcEvent.worker_count = event.get('worker_count');
       fcEvent.payment = event.get('payment');
       fcEvent.paid = event.get('paid');
+      fcEvent.color = window.config.colors[event.get('job')];
       this.el.fullCalendar('updateEvent', fcEvent);
     },
     eventDropOrResize: function(fcEvent) {
@@ -90,13 +91,28 @@ $(function(){
 
   var EventView = Backbone.View.extend({
     el: $('#eventDialog'),
+    template: _.template($('#timesheetsTemplate').html()),
     events: {
-      "change #supervisor_hours" :"updatePayment",
-      "change #worker_hours" :"updatePayment",
-      "change #worker_count" :"updatePayment"
+      "change input[name=supervisor_hours]" :"updatePayment",
+      "change input[name=worker_hours]" :"updatePayment",
+      "change input[name=worker_count]" :"updatePayment",
+      "change input[name=paid]" :"updatePaid"
     },
     initialize: function() {
       _.bindAll(this);
+    },
+    updatePayment: function() {
+      var supervisor_payment = window.config.rates['supervisor'] * this.$("input[name=supervisor_hours]").val();
+      var worker_payment = window.config.rates['worker'] * this.$('input[name=worker_hours]').val() * this.$('input[name=worker_count]').val();
+      var payment = supervisor_payment + worker_payment;
+      this.model.set({
+        'payment': payment
+      });
+      this.$('input[name=payment]').val(payment);
+    },
+    updatePaid: function() {
+      var pay_span = ($('input[name=paid]').is(':checked')) ? '(paid)' : '(unpaid)';
+      $("input[name=paid] + span").text(pay_span);
     },
     render: function() {
       var buttons = {
@@ -110,40 +126,38 @@ $(function(){
       _.extend(buttons, {
         'Cancel': this.close
       });
-            
+
+      $(this.el).html(this.template());
+
       this.el.dialog({
         modal: true,
         title: (this.model.isNew() ? 'New' : 'Edit') + ' Timecard',
         buttons: buttons,
         open: this.open
       });
-
       return this;
     },
     open: function() {
-      this.$('#title').val(this.model.get('title'));
-      this.$('#location').val(this.model.get('location'));
-      this.$('#job').val(this.model.get('job'));
-      this.$('#supervisor_hours').val(this.model.get('supervisor_hours'));
-      this.$('#worker_hours').val(this.model.get('worker_hours'));
-      this.$('#worker_count').val(this.model.get('worker_count'));
-      this.$('#payment').val(this.model.get('payment'));
-      this.$('#paid').prop("checked",(this.model.get('paid')));
+      var this_model = this.model
+      this.$(":input").each( function(){
+        $(this).val(this_model.get($(this).attr('name')))
+      });
+      this.updatePaid();
     },
     save: function() {
-      var supervisor_payment = window.config.rates['supervisor'] * this.$('#supervisor_hours').val();
-      var worker_payment = window.config.rates['worker'] * this.$('#worker_hours').val() * this.$('#worker_count').val();
+      var supervisor_payment = window.config.rates['supervisor'] * this.$('input[name=supervisor_hours]').val();
+      var worker_payment = window.config.rates['worker'] * this.$('input[name=worker_hours]').val() * this.$('input[name=worker_count]').val();
       var payment = supervisor_payment + worker_payment;
       this.model.set({
-        'title': window.config.jobs[this.$('#job').val()] + ":" + window.config.locations[this.$('#location').val()],
-        'location': this.$('#location').val(),
-        'job': this.$('#job').val(),
-        'supervisor_hours': this.$('#supervisor_hours').val(),
-        'worker_hours': this.$('#worker_hours').val(),
-        'worker_count': this.$('#worker_count').val(),
-        'color': window.config.colors[this.$('#job').val()],
-        'payment': payment,
-        'paid': this.$('#paid').is(':checked')
+        'title': window.config.jobs[this.$('input[name=job]').val()] + ":" + window.config.locations[this.$('input[name=location]').val()],
+        'color': window.config.colors[this.$('input[name=job]').val()],
+        'location': this.$('input[name=location]').val(),
+        'job': this.$('input[name=job]').val(),
+        'supervisor_hours': this.$('input[name=supervisor_hours]').val(),
+        'worker_hours': this.$('input[name=worker_hours]').val(),
+        'worker_count': this.$('input[name=worker_count]').val(),
+        'paid': this.$('input[name=paid]').is(':checked'),
+        'payment': payment
       });
             
       if (this.model.isNew()) {
@@ -163,21 +177,14 @@ $(function(){
       this.model.destroy({
         success: this.close
       });
-    },
-    updatePayment: function() {
-      console.info('updatePayment')
-      var supervisor_payment = window.config.rates['supervisor'] * this.$('#supervisor_hours').val();
-      var worker_payment = window.config.rates['worker'] * this.$('#worker_hours').val() * this.$('#worker_count').val();
-      var payment = supervisor_payment + worker_payment;
-      this.model.set({
-        'payment': payment
-      });
-      $('#payment').val(payment);
     }
   });
 
   $.getJSON("configuration", function(configData){
     window.config = configData;
+
+    $( "#tabs" ).tabs();
+
     var events = new Events();
     new EventsView({
       el: $("#timesheets"),
@@ -188,11 +195,6 @@ $(function(){
         console.info(data)
       }
     });
-    _.each(window.config.locations,function(value,key){
-      $("#location").append("<option value='" + key + "'>" + value + "</option>");
-    });
-    _.each(window.config.jobs,function(value,key){
-      $("#job").append("<option value='" + key + "'>" + value + "</option>");
-    });
+    
   });
 });
