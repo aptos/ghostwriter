@@ -28,5 +28,13 @@
       "rates": {
         "supervisor": 15,
         "worker": 12
-      }
+      },
+      "expense_columns": [
+        "Date",
+        "Vendor",
+        "Category",
+        "Description",
+        "Account",
+        "Amount"
+      ]
  }

@@ -2,12 +2,14 @@
   <head>
     <link rel='stylesheet' type='text/css' href='css/jquery-ui-1.8.13.custom.css'/>
     <link rel='stylesheet' type='text/css' href='css/fullcalendar.css'/>
+    <link rel='stylesheet' type='text/css' href='css/jquery.dataTables.css'/>
     <link rel='stylesheet' type='text/css' href='css/application.css'/>
 
     <script type='text/javascript' src='js/vendor/jquery-1.7.1.min.js'></script>
     <script type="text/javascript" src="js/vendor/jquery.couch.js"></script>
     <script type='text/javascript' src='js/vendor/jquery-ui-1.8.13.custom.min.js'></script>
     <script type='text/javascript' src='js/vendor/fullcalendar.min.js'></script>
+    <script type='text/javascript' src='js/vendor/jquery.dataTables.min.js'></script>
     <script type='text/javascript' src='js/vendor/underscore.js'></script>
     <script type='text/javascript' src='js/vendor/backbone.js'></script>
     <script type='text/javascript' src='js/vendor/backbone-couchdb.js'></script>
@@ -16,63 +18,92 @@
   <body>
 
     <!-- Templates -->
-    <script type="text/template" id="timesheetsTemplate">
-      <div id='timesheets'>
-        <div id='eventDialog' class='dialog ui-helper-hidden'>
-          <h3>Timesheets</h3>
-          <form id='timesheet'>
-            <div>
-              <div id='title'></div>
-            </div>
-            <div>
-              <label>Location:</label>
-              <select name='location' class="field" type="select">
-                <% _.each(window.config.locations,function(value,key){ %>
-                <option value='<%= key %>'><%= value %></option>
-                <% }); %>
-              </select>
-            </div>
-            <div>
-              <label>Job:</label>
-              <select name='job' class="field" type="select">
-                <% _.each(window.config.jobs,function(value,key){ %>
-                <option value='<%= key %>'><%= value %></option
-                <% }); %>
-              </select>
-            </div>
-            <div>
-              <h3>Hours:</h3>
-              <label>Supervisor:</label>
-              <input name='supervisor_hours' class="field" type="text" />
-              <label>Worker:</label>
-              <input name='worker_hours' class="field" type="text" />
-              <label>Worker Count:</label>
-              <input name='worker_count' class="field" type="text" />
-            </div>
-            <div>
-              <div>
-                <h3>Payment:</h3>
-                <input name='payment' class="field" type="text" />
-                <input name='paid' class="field" type="checkbox" />
-                <span>(paid)</span>
-              </div>
-            </div>
-        </div>
-        </form>
+    <script type="text/template" id="timesheetFormTemplate">
+      <div>
+        <div id='title'></div>
       </div>
+      <div>
+        <label>Location:</label>
+        <select name='location' class="field" type="select">
+          <% _.each(window.config.locations,function(value,key){ %>
+          <option value='<%= key %>'><%= value %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div>
+        <label>Job:</label>
+        <select name='job' class="field" type="select">
+          <% _.each(window.config.jobs,function(value,key){ %>
+          <option value='<%= key %>'><%= value %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div>
+        <h3>Hours:</h3>
+        <table>
+          <tr>
+            <td><label>Supervisor:</label></td>
+            <td><input name='supervisor_hours' class="field" type="text" /></td>
+          </tr>
+          <tr>
+            <td><label>Worker:</label></td>
+            <td><input name='worker_hours' class="field" type="text" /></td>
+          </tr>
+          <tr>
+            <td><label>Worker Count:</label></td>
+            <td><input name='worker_count' class="field" type="text" /></td>
+          </tr>
+        </table>
+        <h3>Payment:</h3>
+        <table>
+          <tr>
+            <td><input name='payment' class="field" type="text" /></td>
+          </tr>
+          <tr>
+            <td><input name='paid' type="checkbox" />
+              <span>(paid)</span>
+            </td>
+          </tr>
+        </table>
     </script>
 
-    <script type="text/template" id="expensesTemplate">
-      <div id='expenses'>
-        <h3>Expenses</h3>
-      </div>
+    <script type="text/template" id="expenseTableTemplate">
+      <thead>
+        <tr>
+          <% _.each(window.config.expense_columns,function(value){ %>
+          <th><%= value %></th>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>March 18, 2012</td>
+          <td>Home Depot</td>
+          <td>Tools</td>
+          <td>Clippers</td>
+          <td>Ghost Writer</td>
+          <td>14.99</td>
+        </tr>
+      </tbody>
     </script>
 
     <div id="tabs">
       <ul>
-        <li><a href="#expenses">Expenses</a></li>
         <li><a href="#timesheets">Timesheets</a></li>
+        <li><a href="#expenses">Expenses</a></li>
       </ul>
+      <div id='timesheets'>
+        <div id='eventDialog' class='dialog ui-helper-hidden'>
+          <h3>Timesheets</h3>
+          <form id='timesheet'>
+          </form>
+        </div>
+      </div>
+      <div id='expenses'>
+        <h3>Expenses</h3>
+        <table id='expenseTable'>
+        </table
+      </div>
     </div>
   </body>
 </html>

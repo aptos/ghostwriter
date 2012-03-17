@@ -13,7 +13,31 @@ $(function(){
     url : Backbone.couch_connector.config.db_name,
     model: Event
   });
- 
+
+  var Expense = Backbone.Model.extend();
+
+  var Expenses = Backbone.Collection.extend({
+    db : {
+      view : "byCollection",
+      changes : false
+    },
+    url : Backbone.couch_connector.config.db_name,
+    model: Expense
+  });
+
+  var ExpensesView = Backbone.View.extend({
+    el: $('#expenseTable'),
+    expenseHeaders: _.template($('#expenseTableTemplate').html()),
+    initialize: function(){
+      _.bindAll(this);
+    },
+    render: function(){
+      this.el.html(this.expenseHeaders()),
+      this.el.dataTable( {
+        });
+    }
+  });
+
   var EventsView = Backbone.View.extend({
     initialize: function(){
       _.bindAll(this);
@@ -91,7 +115,7 @@ $(function(){
 
   var EventView = Backbone.View.extend({
     el: $('#eventDialog'),
-    template: _.template($('#timesheetsTemplate').html()),
+    templateForm: _.template($('#timesheetFormTemplate').html()),
     events: {
       "change input[name=supervisor_hours]" :"updatePayment",
       "change input[name=worker_hours]" :"updatePayment",
@@ -126,8 +150,7 @@ $(function(){
       _.extend(buttons, {
         'Cancel': this.close
       });
-
-      $(this.el).html(this.template());
+      $("#timesheet").html(this.templateForm());
 
       this.el.dialog({
         modal: true,
@@ -142,21 +165,22 @@ $(function(){
       this.$(":input").each( function(){
         $(this).val(this_model.get($(this).attr('name')))
       });
+      $(":input[name='paid']").prop("checked", this_model.get('paid'))
       this.updatePaid();
     },
     save: function() {
-      var supervisor_payment = window.config.rates['supervisor'] * this.$('input[name=supervisor_hours]').val();
-      var worker_payment = window.config.rates['worker'] * this.$('input[name=worker_hours]').val() * this.$('input[name=worker_count]').val();
+      var supervisor_payment = window.config.rates['supervisor'] * this.$(':input[name=supervisor_hours]').val();
+      var worker_payment = window.config.rates['worker'] * this.$(':input[name=worker_hours]').val() * this.$(':input[name=worker_count]').val();
       var payment = supervisor_payment + worker_payment;
       this.model.set({
-        'title': window.config.jobs[this.$('input[name=job]').val()] + ":" + window.config.locations[this.$('input[name=location]').val()],
-        'color': window.config.colors[this.$('input[name=job]').val()],
-        'location': this.$('input[name=location]').val(),
-        'job': this.$('input[name=job]').val(),
-        'supervisor_hours': this.$('input[name=supervisor_hours]').val(),
-        'worker_hours': this.$('input[name=worker_hours]').val(),
-        'worker_count': this.$('input[name=worker_count]').val(),
-        'paid': this.$('input[name=paid]').is(':checked'),
+        'title': window.config.jobs[this.$(':input[name=job]').val()] + ":" + window.config.locations[this.$(':input[name=location]').val()],
+        'color': window.config.colors[this.$(':input[name=job]').val()],
+        'location': this.$(':input[name=location]').val(),
+        'job': this.$(':input[name=job]').val(),
+        'supervisor_hours': this.$(':input[name=supervisor_hours]').val(),
+        'worker_hours': this.$(':input[name=worker_hours]').val(),
+        'worker_count': this.$(':input[name=worker_count]').val(),
+        'paid': this.$(':input[name=paid]').is(':checked'),
         'payment': payment
       });
             
@@ -191,6 +215,17 @@ $(function(){
       collection: events
     }).render();
     events.fetch({
+      success: function(data){
+        console.info(data)
+      }
+    });
+
+    var expenses = new Expenses();
+    new ExpensesView({
+      el: $("#expenseTable"),
+      collection: expenses
+    }).render();
+    expenses.fetch({
       success: function(data){
         console.info(data)
       }
