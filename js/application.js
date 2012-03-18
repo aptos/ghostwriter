@@ -3,25 +3,25 @@ $(function(){
   Backbone.couch_connector.config.ddoc_name = "ghostwriter";
   Backbone.couch_connector.config.global_changes = false;
 
-  var Event = Backbone.Model.extend();
+  var Timecard = Backbone.Model.extend();
 
-  var Events = Backbone.Collection.extend({
+  var Timecards = Backbone.Collection.extend({
     db : {
-      view : "byCollection",
+      view : "timecards",
       changes : false
     },
-    url : Backbone.couch_connector.config.db_name,
-    model: Event
+    url : "/timecards",
+    model: Timecard
   });
 
   var Expense = Backbone.Model.extend();
 
   var Expenses = Backbone.Collection.extend({
     db : {
-      view : "byCollection",
+      view : "expenses",
       changes : false
     },
-    url : Backbone.couch_connector.config.db_name,
+    url : "/expenses",
     model: Expense
   });
 
@@ -38,7 +38,7 @@ $(function(){
     }
   });
 
-  var EventsView = Backbone.View.extend({
+  var TimecardsView = Backbone.View.extend({
     initialize: function(){
       _.bindAll(this);
       this.collection.bind('reset', this.addAll);
@@ -47,7 +47,7 @@ $(function(){
       this.collection.bind('destroy', this.destroy);
       this.collection.bind('all', this.test);
 
-      this.eventView = new EventView();
+      this.timecardView = new TimecardView();
     },
     test: function(data){
       console.info(data);
@@ -57,7 +57,7 @@ $(function(){
         header: {
           left: 'prev,next today',
           center: 'title',
-          right: 'month,basicWeek,basicDay'
+          right: 'month,basicWeek'
         },
         selectable: true,
         selectHelper: true,
@@ -72,33 +72,33 @@ $(function(){
     addAll: function() {
       this.el.fullCalendar('addEventSource', this.collection.toJSON());
     },
-    addOne: function(event) {
-      this.el.fullCalendar('renderEvent', event.toJSON());
+    addOne: function(timecard) {
+      this.el.fullCalendar('renderEvent', timecard.toJSON());
     },
     select: function(startDate, endDate) {
-      this.eventView.collection = this.collection;
-      this.eventView.model = new Event({
+      this.timecardView.collection = this.collection;
+      this.timecardView.model = new Timecard({
         start: startDate,
         end: endDate
       });
-      this.eventView.render();
+      this.timecardView.render();
     },
     eventClick: function(fcEvent) {
-      this.eventView.model = this.collection.get(fcEvent._id);
-      this.eventView.render();
+      this.timecardView.model = this.collection.get(fcEvent._id);
+      this.timecardView.render();
     },
-    change: function(event) {
+    change: function(timecard) {
       // Look up the underlying event in the calendar and update its details from the model
-      var fcEvent = this.el.fullCalendar('clientEvents', event.get('_id'))[0];
-      fcEvent.title = event.get('title');
-      fcEvent.location = event.get('location');
-      fcEvent.job = event.get('job');
-      fcEvent.supervisor_hours = event.get('supervisor_hours');
-      fcEvent.worker_hours = event.get('worker_hours');
-      fcEvent.worker_count = event.get('worker_count');
-      fcEvent.payment = event.get('payment');
-      fcEvent.paid = event.get('paid');
-      fcEvent.color = window.config.colors[event.get('job')];
+      var fcEvent = this.el.fullCalendar('clientEvents', timecard.get('_id'))[0];
+      fcEvent.title = timecard.get('title');
+      fcEvent.location = timecard.get('location');
+      fcEvent.job = timecard.get('job');
+      fcEvent.supervisor_hours = timecard.get('supervisor_hours');
+      fcEvent.worker_hours = timecard.get('worker_hours');
+      fcEvent.worker_count = timecard.get('worker_count');
+      fcEvent.payment = timecard.get('payment');
+      fcEvent.paid = timecard.get('paid');
+      fcEvent.color = window.config.colors[timecard.get('job')];
       this.el.fullCalendar('updateEvent', fcEvent);
     },
     eventDropOrResize: function(fcEvent) {
@@ -108,14 +108,14 @@ $(function(){
         end: fcEvent.end
       });
     },
-    destroy: function(event) {
-      this.el.fullCalendar('removeEvents', event.id);
+    destroy: function(timecard) {
+      this.el.fullCalendar('removeEvents', timecard.id);
     }
   });
 
-  var EventView = Backbone.View.extend({
-    el: $('#eventDialog'),
-    templateForm: _.template($('#timesheetFormTemplate').html()),
+  var TimecardView = Backbone.View.extend({
+    el: $('#timecardDialog'),
+    templateForm: _.template($('#timecardFormTemplate').html()),
     events: {
       "change input[name=supervisor_hours]" :"updatePayment",
       "change input[name=worker_hours]" :"updatePayment",
@@ -150,7 +150,7 @@ $(function(){
       _.extend(buttons, {
         'Cancel': this.close
       });
-      $("#timesheet").html(this.templateForm());
+      $("#timecard").html(this.templateForm());
 
       this.el.dialog({
         modal: true,
@@ -209,12 +209,12 @@ $(function(){
 
     $( "#tabs" ).tabs();
 
-    var events = new Events();
-    new EventsView({
-      el: $("#timesheets"),
-      collection: events
+    var timecards = new Timecards();
+    new TimecardsView({
+      el: $("#timecards"),
+      collection: timecards
     }).render();
-    events.fetch({
+    timecards.fetch({
       success: function(data){
         console.info(data)
       }
