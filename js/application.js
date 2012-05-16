@@ -32,9 +32,19 @@ $(function(){
       _.bindAll(this);
     },
     render: function(){
-      this.el.html(this.expenseHeaders()),
-      this.el.dataTable( {
-        });
+      var viewScope = this;
+      viewScope.el.html(this.expenseHeaders());
+      this.collection.fetch({
+        success: function(data){
+          var myData = [];
+          _.each(data.models, function(value){
+            myData.push(value.attributes);
+          });
+          viewScope.el.dataTable({
+            "aaData": myData
+          });
+        }
+      });
     }
   });
 
@@ -214,22 +224,11 @@ $(function(){
       el: $("#timecards"),
       collection: timecards
     }).render();
-    timecards.fetch({
-      success: function(data){
-        console.info(data)
-      }
-    });
 
     var expenses = new Expenses();
     new ExpensesView({
       el: $("#expenseTable"),
       collection: expenses
     }).render();
-    expenses.fetch({
-      success: function(data){
-        console.info(data)
-      }
-    });
-    
   });
 });

@@ -1,5 +1,5 @@
 function(doc) {
   if (doc.collection == "expenses") {
-    emit(doc.collection, doc);
+    emit(doc.id, [doc.date, doc.vendor, doc.category, doc.description, doc.account, doc.amount]);
   }
 };
