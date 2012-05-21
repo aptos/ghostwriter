@@ -77,6 +77,36 @@
       </thead>
     </script>
 
+    <script type="text/template" id="expenseFormTemplate">
+      <div>
+        <div id='title'></div>
+      </div>
+      <label>Date:</label>
+      <input name='date' class="field" type="text" />
+      <label>Vendor:</label>
+      <input name='vendor' class="field" type="text" />
+      <div>
+        <label>Category:</label>
+        <select name='category' class="field" type="select">
+          <% _.each(window.config.categories,function(value,key){ %>
+          <option value='<%= key %>'><%= value %></option>
+          <% }); %>
+        </select>
+      </div>
+      <label>Description:</label>
+      <input name='description' class="field" type="text" />
+      <div>
+        <label>Account:</label>
+        <select name='account' class="field" type="select">
+          <% _.each(window.config.accounts,function(value,key){ %>
+          <option value='<%= key %>'><%= value %></option>
+          <% }); %>
+        </select>
+      </div>
+      <label>Amount:</label>
+      <input name='amount' class="field" type="text" />
+    </script>
+
     <div id="tabs">
       <ul>
         <li><a href="#timecards">timecards</a></li>
@@ -91,8 +121,14 @@
       </div>
       <div id='expenses'>
         <h3>Expenses</h3>
+        <button id="add-expense">+ Expense</button>
+        <button id="add-deposit">+ Deposit</button>
         <table id='expenseTable'>
-        </table
+        </table>
+        <div id='expenseDialog' class='dialog ui-helper-hidden'>
+          <form id='expense'>
+          </form>
+        </div>
       </div>
     </div>
   </body>

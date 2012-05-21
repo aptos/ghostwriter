@@ -36,5 +36,25 @@
         "Description",
         "Account",
         "Amount"
-      ]
+      ],
+      "categories":{
+        "canopy": "Canopy",
+        "farming_equipment": "Farming Equipment",
+        "fuel": "Fuel",
+        "fungicides": "Fungicides",
+        "harvest": "Harvest",
+        "netting": "Netting",
+        "nutrients":"Nutrients",
+        "planting": "Planting",
+        "production_equipment": "Production Equipment",
+        "pruning": "Pruning",
+        "spray": "Spray",
+        "trellis": "Trellis Repairs",
+        "weeds": "Weed Removal"
+      },
+      "accounts":{
+        "brian": "Brian",
+        "kenny": "Kenny",
+        "ghostwriter": "Ghost Writer"
+      }
  }

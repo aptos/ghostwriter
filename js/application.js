@@ -30,6 +30,22 @@ $(function(){
     expenseHeaders: _.template($('#expenseTableTemplate').html()),
     initialize: function(){
       _.bindAll(this);
+
+      this.collection.bind('all', this.test);
+
+      this.expenseView = new ExpenseView();
+    },
+    events: {
+        'click #add-expense': 'newExpense'
+    },
+    test: function(data){
+      console.info(data);
+    },
+
+    newExpense:function (event) {
+        console.info("newExpense!")
+        this.expenseView.render();
+        return false;
     },
     render: function(){
       var viewScope = this;
@@ -44,6 +60,72 @@ $(function(){
             "aaData": myData
           });
         }
+      });
+    }
+  });
+
+  var ExpenseView = Backbone.View.extend({
+    el: $('#expenseDialog'),
+    templateForm: _.template($('#expenseFormTemplate').html()),
+    events: {
+    },
+    initialize: function() {
+      _.bindAll(this);
+    },
+    render: function() {
+      var buttons = {
+        'Ok': this.save
+      };
+      if (!this.model.isNew()) {
+        _.extend(buttons, {
+          'Delete': this.destroy
+        });
+      }
+      _.extend(buttons, {
+        'Cancel': this.close
+      });
+      $("#expense").html(this.templateForm());
+
+      this.el.dialog({
+        modal: true,
+        title: (this.model.isNew() ? 'New' : 'Edit') + ' Expense',
+        buttons: buttons,
+        open: this.open
+      });
+      return this;
+    },
+    open: function() {
+      var this_model = this.model
+      this.$(":input").each( function(){
+        $(this).val(this_model.get($(this).attr('name')))
+      });
+    },
+    save: function() {
+      this.model.set({
+        'date': this.$(':input[name=date]').val(),
+        'vendor': this.$(':input[name=vendor]').val(),
+        'category': this.$(':input[name=category]').val(),
+        'description': this.$(':input[name=description]').val(),
+        'account': this.$(':input[name=account]').val(),
+        'amount': this.$(':input[name=amount]').val()
+      });
+
+      if (this.model.isNew()) {
+        this.collection.create(this.model, {
+          success: this.close
+        });
+      } else {
+        this.model.save({}, {
+          success: this.close
+        });
+      }
+    },
+    close: function() {
+      this.el.dialog('close');
+    },
+    destroy: function() {
+      this.model.destroy({
+        success: this.close
       });
     }
   });
