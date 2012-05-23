@@ -26,10 +26,11 @@ $(function(){
   });
 
   var ExpensesView = Backbone.View.extend({
-    el: $('#expenseTable'),
+    el: $('#expenses'),
+    expense_table: $('#expenseTable'),
     expenseHeaders: _.template($('#expenseTableTemplate').html()),
     initialize: function(){
-      _.bindAll(this);
+      _.bindAll(this, 'newExpense');
 
       this.collection.bind('all', this.test);
 
@@ -44,19 +45,20 @@ $(function(){
 
     newExpense:function (event) {
         console.info("newExpense!")
+        this.expenseView.model = new Expense();
         this.expenseView.render();
         return false;
     },
     render: function(){
       var viewScope = this;
-      viewScope.el.html(this.expenseHeaders());
+      viewScope.expense_table.html(this.expenseHeaders());
       this.collection.fetch({
         success: function(data){
           var myData = [];
           _.each(data.models, function(value){
             myData.push(value.attributes);
           });
-          viewScope.el.dataTable({
+          viewScope.expense_table.dataTable({
             "aaData": myData
           });
         }
@@ -309,7 +311,6 @@ $(function(){
 
     var expenses = new Expenses();
     new ExpensesView({
-      el: $("#expenseTable"),
       collection: expenses
     }).render();
   });
