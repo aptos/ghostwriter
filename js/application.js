@@ -98,6 +98,21 @@ $(function(){
       });
       $("#expense").html(this.templateForm());
 
+      $( "#datepicker" ).datepicker();
+
+// Setup autocomplete list from vednor list in the collection
+      var availableVendors = [];
+      var u = {};
+      _.each(this.collection.models, function(model){
+        if (!(model.attributes[1] in u)){
+          availableVendors.push(model.attributes[1]);
+          u[model.attributes[1]] = 1;
+        }
+      });
+      $( "#vendor" ).autocomplete({
+        source: availableVendors
+      });
+
       this.el.dialog({
         modal: true,
         title: (this.model.isNew() ? 'New' : 'Edit') + ' Expense',
@@ -107,6 +122,7 @@ $(function(){
       return this;
     },
     open: function() {
+
       var this_model = this.model
       this.$(":input").each( function(){
         $(this).val(this_model.get($(this).attr('name')))
