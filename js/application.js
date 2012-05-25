@@ -51,11 +51,12 @@ $(function(){
         return false;
     },
     addOne: function(expense) {
-      console.info(expense.attributes)
       var expenseRow = [];
-      _.each(expense.attributes, function(value){
+      console.info(expense.attributes.id)
+      $.each(expense.attributes, function(key, value){
             expenseRow.push(value);
           });
+          console.info(expenseRow)
       $('#expenseTable').dataTable().fnAddData(expenseRow);
     },
     render: function(){
@@ -84,7 +85,6 @@ $(function(){
       _.bindAll(this);
     },
     render: function() {
-      console.info(this.collection)
       var buttons = {
         'Ok': this.save
       };
@@ -242,6 +242,13 @@ $(function(){
       var pay_span = ($('input[name=paid]').is(':checked')) ? '(paid)' : '(unpaid)';
       $("input[name=paid] + span").text(pay_span);
     },
+    formatDate: function(date){
+      console.info(typeof(date))
+      if(typeof(date) === 'string'){
+        date.replace(/T.*/,'');
+      }
+      return date ;
+    },
     render: function() {
       var buttons = {
         'Ok': this.save
@@ -266,6 +273,9 @@ $(function(){
     },
     open: function() {
       var this_model = this.model
+      console.info(this_model.get('start'))
+      var startDate = this.formatDate(this_model.get('start'));
+      this.$('#start').text(startDate);
       this.$(":input").each( function(){
         $(this).val(this_model.get($(this).attr('name')))
       });
@@ -318,6 +328,7 @@ $(function(){
       el: $("#timecards"),
       collection: timecards
     }).render();
+    timecards.fetch();
 
     var expenses = new Expenses();
     new ExpensesView({

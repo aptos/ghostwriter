@@ -23,6 +23,8 @@
         <div id='title'></div>
       </div>
       <div>
+        <span id='start'/>
+      <div>
         <label>Location:</label>
         <select name='location' class="field" type="select">
           <% _.each(window.config.locations,function(value,key){ %>
@@ -114,7 +116,7 @@
       </ul>
       <div id='timecards'>
         <div id='timecardDialog' class='dialog ui-helper-hidden'>
-          <h3>timecards</h3>
+          <h3>Timecard</h3>
           <form id='timecard'>
           </form>
         </div>
