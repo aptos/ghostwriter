@@ -31,7 +31,7 @@ $(function(){
     expenseHeaders: _.template($('#expenseTableTemplate').html()),
     initialize: function(){
       _.bindAll(this, 'newExpense');
-
+      this.collection.bind('add', this.addOne);
       this.collection.bind('all', this.test);
 
       this.expenseView = new ExpenseView();
@@ -42,12 +42,21 @@ $(function(){
     test: function(data){
       console.info(data);
     },
-
     newExpense:function (event) {
         console.info("newExpense!")
-        this.expenseView.model = new Expense();
-        this.expenseView.render();
+        var expenseView = new ExpenseView();
+        expenseView.collection = this.collection;
+        expenseView.model = new Expense();
+        expenseView.render();
         return false;
+    },
+    addOne: function(expense) {
+      console.info(expense.attributes)
+      var expenseRow = [];
+      _.each(expense.attributes, function(value){
+            expenseRow.push(value);
+          });
+      $('#expenseTable').dataTable().fnAddData(expenseRow);
     },
     render: function(){
       var viewScope = this;
@@ -75,6 +84,7 @@ $(function(){
       _.bindAll(this);
     },
     render: function() {
+      console.info(this.collection)
       var buttons = {
         'Ok': this.save
       };
