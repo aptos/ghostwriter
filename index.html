@@ -24,114 +24,116 @@
       </div>
       <div>
         <span id='start'/>
-      <div>
-        <label>Location:</label>
-        <select name='location' class="field" type="select">
-          <% _.each(window.config.locations,function(value,key){ %>
-          <option value='<%= key %>'><%= value %></option>
-          <% }); %>
-        </select>
-      </div>
-      <div>
-        <label>Job:</label>
-        <select name='job' class="field" type="select">
-          <% _.each(window.config.jobs,function(value,key){ %>
-          <option value='<%= key %>'><%= value %></option>
-          <% }); %>
-        </select>
-      </div>
-      <div>
-        <h3>Hours:</h3>
-        <table>
-          <tr>
-            <td><label>Supervisor:</label></td>
-            <td><input name='supervisor_hours' class="field" type="text" /></td>
-          </tr>
-          <tr>
-            <td><label>Worker:</label></td>
-            <td><input name='worker_hours' class="field" type="text" /></td>
-          </tr>
-          <tr>
-            <td><label>Worker Count:</label></td>
-            <td><input name='worker_count' class="field" type="text" /></td>
-          </tr>
-        </table>
-        <h3>Payment:</h3>
-        <table>
-          <tr>
-            <td><input name='payment' class="field" type="text" /></td>
-          </tr>
-          <tr>
-            <td><input name='paid' type="checkbox" />
-              <span>(paid)</span>
-            </td>
-          </tr>
-        </table>
-    </script>
-
-    <script type="text/template" id="expenseTableTemplate">
-      <thead>
-        <tr>
-          <% _.each(window.config.expense_columns,function(value){ %>
-          <th><%= value %></th>
-          <% }); %>
-        </tr>
-      </thead>
-    </script>
-
-    <script type="text/template" id="expenseFormTemplate">
-      <div>
-        <div id='title'></div>
-      </div>
-      <label>Date:</label>
-      <input id="datepicker" name='date' class="field" type="text" />
-      <label>Vendor:</label>
-      <input id="vendor" name='vendor' class="field" type="text" />
-      <div>
-        <label>Category:</label>
-        <select name='category' class="field" type="select">
-          <% _.each(window.config.categories,function(value,key){ %>
-          <option value='<%= key %>'><%= value %></option>
-          <% }); %>
-        </select>
-      </div>
-      <label>Description:</label>
-      <input name='description' class="field" type="text" />
-      <div>
-        <label>Account:</label>
-        <select name='account' class="field" type="select">
-          <% _.each(window.config.accounts,function(value,key){ %>
-          <option value='<%= key %>'><%= value %></option>
-          <% }); %>
-        </select>
-      </div>
-      <label>Amount:</label>
-      <input name='amount' class="field" type="text" />
-    </script>
-
-    <div id="tabs">
-      <ul>
-        <li><a href="#timecards">timecards</a></li>
-        <li><a href="#expenses">Expenses</a></li>
-      </ul>
-      <div id='timecards'>
-        <div id='timecardDialog' class='dialog ui-helper-hidden'>
-          <h3>Timecard</h3>
-          <form id='timecard'>
-          </form>
+        <div>
+          <label>Location:</label>
+          <select name='location' class="field" type="select">
+            <% _.each(window.config.locations,function(value,key){ %>
+            <option value='<%= key %>'><%= value %></option>
+            <% }); %>
+          </select>
         </div>
-      </div>
-      <div id='expenses'>
-        <h3>Expenses</h3>
-        <button id="add-expense"><span class="add-expense">+ Expense</span></button>
-        <button id="add-deposit">+ Deposit</button>
-        <table id='expenseTable'>
-        </table>
-        <div id='expenseDialog' class='dialog ui-helper-hidden'>
-          <form id='expense'>
-          </form>
+        <div>
+          <label>Job:</label>
+          <select name='job' class="field" type="select">
+            <% _.each(window.config.jobs,function(value,key){ %>
+            <option value='<%= key %>'><%= value %></option>
+            <% }); %>
+          </select>
         </div>
-      </div>
-    </div>
-  </body>
-</html>
+        <div>
+          <h3>Hours:</h3>
+          <table>
+            <tr>
+              <td><label>Supervisor:</label></td>
+              <td><input name='supervisor_hours' class="field" type="text" /></td>
+            </tr>
+            <tr>
+              <td><label>Worker:</label></td>
+              <td><input name='worker_hours' class="field" type="text" /></td>
+            </tr>
+            <tr>
+              <td><label>Worker Count:</label></td>
+              <td><input name='worker_count' class="field" type="text" /></td>
+            </tr>
+          </table>
+          <h3>Payment:</h3>
+          <table>
+            <tr>
+              <td><input name='payment' class="field" type="text" /></td>
+            </tr>
+            <tr>
+              <td><input name='paid' type="checkbox" />
+                <span>(paid)</span>
+              </td>
+            </tr>
+          </table>
+          </script>
+
+          <script type="text/template" id="expenseTableTemplate">
+            <thead>
+              <tr>
+                <% _.each(window.config.expense_columns,function(value){ %>
+                <th><%= value %></th>
+                <% }); %>
+              </tr>
+            </thead>
+          </script>
+
+          <script type="text/template" id="expenseFormTemplate">
+            <div>
+              <div id='title'></div>
+            </div>
+            <label>Date:</label>
+            <input id="datepicker" name='date' class="field" type="text" />
+            <label>Vendor:</label>
+            <input id="vendor" name='vendor' class="field" type="text" />
+            <div>
+              <label>Category:</label>
+              <select name='category' class="field" type="select">
+                <% _.each(window.config.categories,function(value,key){ %>
+                <option value='<%= key %>'><%= value %></option>
+                <% }); %>
+              </select>
+            </div>
+            <label>Description:</label>
+            <input name='description' class="field" type="text" />
+            <div>
+              <label>Account:</label>
+              <select name='account' class="field" type="select">
+                <% _.each(window.config.accounts,function(value,key){ %>
+                <option value='<%= key %>'><%= value %></option>
+                <% }); %>
+              </select>
+            </div>
+            <label>Amount:</label>
+            <input name='amount' class="field" type="text" />
+          </script>
+
+          <div id="tabs">
+            <ul>
+              <li><a href="#timecards">timecards</a></li>
+              <li><a href="#expenses">Expenses</a></li>
+            </ul>
+            <div id='timecards'>
+              <div id='timecardDialog' class='dialog ui-helper-hidden'>
+                <form id='timecard'>
+                </form>
+              </div>
+            </div>
+            <div id='expenses'>
+              <button id="add-expense"><span class="add-expense">+ Expense</span></button>
+              <button id="add-deposit">+ Deposit</button>
+              <div class="balance">
+                <span>Current Balance: $</span>
+                <span id="balance" />
+              </div>
+              <table id='expenseTable'>
+              </table>
+              <div id='expenseDialog' class='dialog ui-helper-hidden'>
+                <form id='expense'>
+                </form>
+              </div>
+            </div>
+          </div>
+          </body>
+          </html>

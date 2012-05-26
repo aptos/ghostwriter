@@ -30,34 +30,55 @@ $(function(){
     expense_table: $('#expenseTable'),
     expenseHeaders: _.template($('#expenseTableTemplate').html()),
     initialize: function(){
-      _.bindAll(this, 'newExpense');
+      _.bindAll(this);
       this.collection.bind('add', this.addOne);
+      this.collection.bind('select', this.select);
       this.collection.bind('all', this.test);
 
       this.expenseView = new ExpenseView();
     },
     events: {
-        'click #add-expense': 'newExpense'
+      'click #add-expense': 'newExpense',
+      'click #expenseTable tbody tr': 'select'
     },
     test: function(data){
       console.info(data);
     },
     newExpense:function (event) {
-        console.info("newExpense!")
-        var expenseView = new ExpenseView();
-        expenseView.collection = this.collection;
-        expenseView.model = new Expense();
-        expenseView.render();
-        return false;
+      console.info("newExpense!")
+      var expenseView = new ExpenseView();
+      expenseView.collection = this.collection;
+      expenseView.model = new Expense();
+      expenseView.render();
+      return false;
     },
     addOne: function(expense) {
       var expenseRow = [];
-      console.info(expense.attributes.id)
       $.each(expense.attributes, function(key, value){
-            expenseRow.push(value);
-          });
-          console.info(expenseRow)
+        expenseRow.push(value);
+      });
       $('#expenseTable').dataTable().fnAddData(expenseRow);
+      this.updateBalance();
+    },
+    updateBalance: function(){
+      var balance = 0.0;
+      var amount = 0.0
+      _.each(this.collection.models, function(model){
+        amount = (model.attributes.amount) ? model.attributes.amount : model.attributes[5]
+        balance = balance + parseFloat(amount);
+      });
+      balance = balance.formatMoney(2, '.', ',');
+      $('#balance').text(balance)
+    },
+    select: function(e){
+      console.info(e.currentTarget)
+      if ( e.currentTarget.hasClass('row_selected') ) {
+        e.currentTarget.removeClass('row_selected');
+      }
+      else {
+        this.expense_table.$('tr.row_selected').removeClass('row_selected');
+        e.currentTarget.addClass('row_selected');
+      }
     },
     render: function(){
       var viewScope = this;
@@ -71,6 +92,7 @@ $(function(){
           viewScope.expense_table.dataTable({
             "aaData": myData
           });
+          viewScope.updateBalance();
         }
       });
     }
@@ -100,13 +122,15 @@ $(function(){
 
       $( "#datepicker" ).datepicker();
 
-// Setup autocomplete list from vednor list in the collection
+      // Setup autocomplete list from vendor list in the collection
       var availableVendors = [];
       var u = {};
+      var vendor = '';
       _.each(this.collection.models, function(model){
-        if (!(model.attributes[1] in u)){
-          availableVendors.push(model.attributes[1]);
-          u[model.attributes[1]] = 1;
+        vendor = (model.attributes.vendor) ? model.attributes.vendor : model.attributes[1]
+        if (!(vendor in u)){
+          availableVendors.push(vendor);
+          u[vendor] = 1;
         }
       });
       $( "#vendor" ).autocomplete({
@@ -122,7 +146,6 @@ $(function(){
       return this;
     },
     open: function() {
-
       var this_model = this.model
       this.$(":input").each( function(){
         $(this).val(this_model.get($(this).attr('name')))
@@ -259,9 +282,8 @@ $(function(){
       $("input[name=paid] + span").text(pay_span);
     },
     formatDate: function(date){
-      console.info(typeof(date))
-      if(typeof(date) === 'string'){
-        date.replace(/T.*/,'');
+      if(typeof(date) == 'string'){
+        date = date.replace(/T.*/,'');
       }
       return date ;
     },
@@ -289,7 +311,6 @@ $(function(){
     },
     open: function() {
       var this_model = this.model
-      console.info(this_model.get('start'))
       var startDate = this.formatDate(this_model.get('start'));
       this.$('#start').text(startDate);
       this.$(":input").each( function(){
@@ -333,6 +354,11 @@ $(function(){
       });
     }
   });
+
+  Number.prototype.formatMoney = function(c, d, t){
+    var n = this, c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "," : d, t = t == undefined ? "." : t, s = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+  };
 
   $.getJSON("configuration", function(configData){
     window.config = configData;
