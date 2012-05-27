@@ -85,25 +85,27 @@
             </div>
             <label>Date:</label>
             <input id="datepicker" name='date' class="field" type="text" />
-            <label>Vendor:</label>
-            <input id="vendor" name='vendor' class="field" type="text" />
-            <div>
-              <label>Category:</label>
-              <select name='category' class="field" type="select">
-                <% _.each(window.config.categories,function(value,key){ %>
-                <option value='<%= key %>'><%= value %></option>
-                <% }); %>
-              </select>
-            </div>
-            <label>Description:</label>
-            <input name='description' class="field" type="text" />
-            <div>
-              <label>Account:</label>
-              <select name='account' class="field" type="select">
-                <% _.each(window.config.accounts,function(value,key){ %>
-                <option value='<%= key %>'><%= value %></option>
-                <% }); %>
-              </select>
+            <div class="expense">
+              <label>Vendor:</label>
+              <input id="vendor" name='vendor' class="field" type="text" />
+              <div>
+                <label>Category:</label>
+                <select name='category' class="field" type="select">
+                  <% _.each(window.config.categories,function(value,key){ %>
+                  <option value='<%= key %>'><%= value %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <label>Description:</label>
+              <input name='description' class="field" type="text" />
+              <div>
+                <label>Account:</label>
+                <select name='account' class="field" type="select">
+                  <% _.each(window.config.accounts,function(value,key){ %>
+                  <option value='<%= key %>'><%= value %></option>
+                  <% }); %>
+                </select>
+              </div>
             </div>
             <label>Amount:</label>
             <input name='amount' class="field" type="text" />
@@ -127,7 +129,7 @@
                 <span>Current Balance: $</span>
                 <span id="balance" />
               </div>
-              <table id='expenseTable'>
+              <table id='expenseTable' width="100%">
               </table>
               <div id='expenseDialog' class='dialog ui-helper-hidden'>
                 <form id='expense'>

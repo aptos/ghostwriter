@@ -31,6 +31,15 @@ table.dataTable td.dataTables_empty {
 	text-align: center;
 }
 
+table.dataTable tr.even.row_selected td { background-color: #99ffff; }
+table.dataTable tr.odd.row_selected td { background-color: #99ffff; }
+table.dataTable tr.odd.row_selected td.sorting_1 { background-color: #99ffff; }
+table.dataTable tr.odd.row_selected td.sorting_2 { background-color: #99ffff; }
+table.dataTable tr.odd.row_selected td.sorting_3 { background-color: #99ffff; }
+table.dataTable tr.even.row_selected td.sorting_1 { background-color: #99ffff; }
+table.dataTable tr.even.row_selected td.sorting_2 { background-color: #99ffff; }
+table.dataTable tr.even.row_selected td.sorting_3 { background-color: #99ffff; }
+
 table.dataTable tr.odd { background-color: #E2E4FF; }
 table.dataTable tr.even { background-color: white; }
 

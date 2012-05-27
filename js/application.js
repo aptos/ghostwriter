@@ -39,6 +39,7 @@ $(function(){
     },
     events: {
       'click #add-expense': 'newExpense',
+      'click #add-deposit': 'newDeposit',
       'click #expenseTable tbody tr': 'select'
     },
     test: function(data){
@@ -49,7 +50,15 @@ $(function(){
       var expenseView = new ExpenseView();
       expenseView.collection = this.collection;
       expenseView.model = new Expense();
-      expenseView.render();
+      expenseView.render('Expense');
+      return false;
+    },
+    newDeposit:function (event) {
+      console.info("newDeposit!")
+      var expenseView = new ExpenseView();
+      expenseView.collection = this.collection;
+      expenseView.model = new Expense();
+      expenseView.render('Deposit');
       return false;
     },
     addOne: function(expense) {
@@ -64,30 +73,38 @@ $(function(){
       var balance = 0.0;
       var amount = 0.0
       _.each(this.collection.models, function(model){
-        amount = (model.attributes.amount) ? model.attributes.amount : model.attributes[5]
-        balance = balance + parseFloat(amount);
+        if(model.attributes.amount){
+          balance = balance + parseFloat(model.attributes.amount);
+        }
       });
       balance = balance.formatMoney(2, '.', ',');
       $('#balance').text(balance)
     },
     select: function(e){
       console.info(e.currentTarget)
-      if ( e.currentTarget.hasClass('row_selected') ) {
-        e.currentTarget.removeClass('row_selected');
+      if ( $(e.currentTarget).hasClass('row_selected') ) {
+        $(e.currentTarget).removeClass('row_selected');
       }
       else {
         this.expense_table.$('tr.row_selected').removeClass('row_selected');
-        e.currentTarget.addClass('row_selected');
+        $(e.currentTarget).addClass('row_selected');
       }
     },
     render: function(){
       var viewScope = this;
+      var row = [];
       viewScope.expense_table.html(this.expenseHeaders());
       this.collection.fetch({
         success: function(data){
           var myData = [];
-          _.each(data.models, function(value){
-            myData.push(value.attributes);
+          _.each(data.models, function(model){
+            row = []
+            $.each(model.attributes, function(key,value){
+              if(key != '_id' && key != '_rev') {
+                row.push(value);
+              }
+            });
+            myData.push(row);
           });
           viewScope.expense_table.dataTable({
             "aaData": myData
@@ -106,7 +123,7 @@ $(function(){
     initialize: function() {
       _.bindAll(this);
     },
-    render: function() {
+    render: function(type) {
       var buttons = {
         'Ok': this.save
       };
@@ -122,13 +139,29 @@ $(function(){
 
       $( "#datepicker" ).datepicker();
 
+      if (type == 'Expense') {
+        $('.expense').show();
+        this.updateAvailableVendors();
+      } else {
+        $('.expense').hide();
+      };
+
+      this.el.dialog({
+        modal: true,
+        title: (this.model.isNew() ? 'New' : 'Edit') + ' ' + type,
+        buttons: buttons,
+        open: this.open
+      });
+      return this;
+    },
+    updateAvailableVendors: function() {
       // Setup autocomplete list from vendor list in the collection
       var availableVendors = [];
       var u = {};
       var vendor = '';
       _.each(this.collection.models, function(model){
-        vendor = (model.attributes.vendor) ? model.attributes.vendor : model.attributes[1]
-        if (!(vendor in u)){
+        vendor = model.attributes.vendor
+        if (vendor && !(vendor in u)){
           availableVendors.push(vendor);
           u[vendor] = 1;
         }
@@ -136,14 +169,6 @@ $(function(){
       $( "#vendor" ).autocomplete({
         source: availableVendors
       });
-
-      this.el.dialog({
-        modal: true,
-        title: (this.model.isNew() ? 'New' : 'Edit') + ' Expense',
-        buttons: buttons,
-        open: this.open
-      });
-      return this;
     },
     open: function() {
       var this_model = this.model
