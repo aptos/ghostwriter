@@ -38,19 +38,15 @@
         "Amount"
       ],
       "categories":{
-        "canopy": "Canopy Management",
+        "miscellaneous": "Miscellaneous",
+        "deposit": "Deposit",
         "farming_equipment": "Farming Equipment",
         "fuel": "Fuel",
         "fungicides": "Fungicides",
-        "harvest": "Harvest",
+        "labor": "Labor",
         "netting": "Netting",
         "nutrients":"Nutrients",
-        "planting": "Planting",
-        "production_equipment": "Production Equipment",
-        "pruning": "Pruning",
-        "spray": "Spray",
-        "trellis": "Trellis Repairs",
-        "weeds": "Weed Removal"
+        "production_equipment": "Production Equipment"
       },
       "accounts":{
         "brian": "Brian",

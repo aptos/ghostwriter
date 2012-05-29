@@ -40,6 +40,7 @@ $(function(){
     events: {
       'click #add-expense': 'newExpense',
       'click #add-deposit': 'newDeposit',
+      'click #add-paycheck': 'newPaycheck',
       'click #expenseTable tbody tr': 'select'
     },
     test: function(data){
@@ -59,6 +60,14 @@ $(function(){
       expenseView.collection = this.collection;
       expenseView.model = new Expense();
       expenseView.render('Deposit');
+      return false;
+    },
+    newPaycheck:function (event) {
+      console.info("newPaycheck!")
+      var expenseView = new ExpenseView();
+      expenseView.collection = this.collection;
+      expenseView.model = new Expense();
+      expenseView.render('Paycheck');
       return false;
     },
     addOne: function(expense) {
@@ -141,9 +150,14 @@ $(function(){
 
       if (type == 'Expense') {
         $('.expense').show();
+        this.$(':input[name=category]').val('Miscellaneous')
         this.updateAvailableVendors();
-      } else {
+      } else if (type == 'Deposit') {
+        this.$(':input[name=category]').val('Deposit')
         $('.expense').hide();
+      } else if (type == 'Paycheck'){
+        console.info("Paycheck")
+        this.$(':input[name=category]').val('Labor')
       };
 
       this.el.dialog({
@@ -278,6 +292,14 @@ $(function(){
     },
     destroy: function(timecard) {
       this.el.fullCalendar('removeEvents', timecard.id);
+    },
+    unpaidTimecards: function() {
+      console.info('unpaid timecards')
+      _.each(this.collection.models, function(model){
+        if(model.attributes.amount){
+          console.info(model.attributes.payment, model.attributes.paid);
+        }
+      });
     }
   });
 
@@ -389,17 +411,19 @@ $(function(){
     window.config = configData;
 
     $( "#tabs" ).tabs();
+    
+    var expenses = new Expenses();
+    var expensesView = new ExpensesView({
+      collection: expenses
+    });
+    expensesView.render();
 
     var timecards = new Timecards();
-    new TimecardsView({
+    var timecardsView = new TimecardsView({
       el: $("#timecards"),
       collection: timecards
-    }).render();
+    });
+    timecardsView.render();
     timecards.fetch();
-
-    var expenses = new Expenses();
-    new ExpensesView({
-      collection: expenses
-    }).render();
   });
 });
