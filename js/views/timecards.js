@@ -82,13 +82,15 @@ $(function () {
     destroy: function(timecard) {
       this.el.fullCalendar('removeEvents', timecard.id);
     },
-    unpaidTimecards: function() {
+    unpaidTimecards: function(pay) {
       console.info('unpaid timecards')
+      var unpaidTimecardList = [];
       _.each(this.collection.models, function(model){
         if(!model.attributes.paid){
-          console.info(model.attributes.payment, model.attributes._id);
+          unpaidTimecardList.push(model.attributes);
         }
       });
+      return unpaidTimecardList;
     }
   });
 

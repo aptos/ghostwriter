@@ -22,23 +22,29 @@ $(function () {
       _.extend(buttons, {
         'Cancel': this.close
       });
+      
       $("#expense").html(this.templateForm());
 
       $( "#datepicker" ).datepicker();
 
       if (type == 'Expense') {
         $('.expense').show();
-        this.$(':input[name=category]').val('Miscellaneous')
+        this.$('select[name=category]').val('miscellaneous');
         this.updateAvailableVendors();
       } else if (type == 'Deposit') {
-        this.$(':input[name=category]').val('Deposit')
+        this.$('select[name=category]').val('deposit');
         $('.expense').hide();
       } else if (type == 'Paycheck'){
-        console.info("Paycheck")
-        var list = timecards_view.unpaidTimecards();
-        this.$(':input[name=category]').val('Labor')
+        this.$('select[name=category]').val('labor');
+        var unpaidTimecardList = timecards_view.unpaidTimecards();
+        if (unpaidTimecardList.length){
+          _.each(unpaidTimecardList, function(timecard){
+            $("#unpaidTimecards").append("<tr class='timecard_row'><td>" +
+              timecard.title + "</td></tr>");
+          });
+        }
       };
-
+      console.log(this.el.html())
       this.el.dialog({
         modal: true,
         title: (this.model.isNew() ? 'New' : 'Edit') + ' ' + type,
@@ -49,18 +55,11 @@ $(function () {
     },
     updateAvailableVendors: function() {
       // Setup autocomplete list from vendor list in the collection
-      var availableVendors = [];
-      var u = {};
-      var vendor = '';
-      _.each(this.collection.models, function(model){
-        vendor = model.attributes.vendor
-        if (vendor && !(vendor in u)){
-          availableVendors.push(vendor);
-          u[vendor] = 1;
-        }
-      });
+      var attrs = _.pluck(this.collection.models,'attributes');
+      var vendors = _.pluck(attrs,'vendor');
+      vendors = _.uniq(vendors);
       $( "#vendor" ).autocomplete({
-        source: availableVendors
+        source: vendors
       });
     },
     open: function() {

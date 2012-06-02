@@ -30,10 +30,13 @@ $(function () {
       console.info(data);
     },
     newExpense:function (event) {
-      console.info("newExpense!")
+      
+      console.info("newExpense!1123")
+      
       var expenseView = new App.View.ExpenseView();
       expenseView.collection = this.collection;
       expenseView.model = new App.Model.Expense();
+      console.log(expenseView.el)
       expenseView.render('Expense');
       return false;
     },
