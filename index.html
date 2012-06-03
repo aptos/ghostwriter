@@ -101,31 +101,37 @@
 
     <div id="tabs">
       <ul>
-        <li><a href="#timecards">timecards</a></li>
-        <li><a href="#expenses">Expenses</a></li>
+        <li><a href="#timecardsTab">timecards</a></li>
+        <li><a href="#expensesTab">Expenses</a></li>
       </ul>
-      <div id='timecards'>
-        <div id='timecardDialog' class='dialog ui-helper-hidden'>
-          <form id='timecard'>
-          </form>
+      <div id="timecardsTab">
+        <span>Unpaid Timecards: $</span>
+        <span id="unpaid_total"></span>
+        <div id='timecards'>
+          <div id='timecardDialog' class='dialog ui-helper-hidden'>
+            <form id='timecard'>
+            </form>
+          </div>
         </div>
       </div>
-      <div id='expenses'>
-        <button id="add-expense"><span class="add-expense">+ Expense</span></button>
-        <button id="add-deposit">+ Deposit</button>
-        <button id="add-paycheck">+ Paycheck</button>
-        <div class="balance">
-          <span>Total Expenses: $</span>
-          <span id="expenses_total"></span>
-          <span>Total Deposits $</span>
-          <span id="deposits_total"></span>
-        </div>
-        <table id='expenseTable' width="100%">
-        </table>
-        <div id='expenseDialog' class='dialog ui-helper-hidden'>
-          <form id='expense'>
-          </form>
-          <table id="unpaidTimecards"></table>
+      <div id="expensesTab">
+        <div id='expenses'>
+          <button id="add-expense"><span class="add-expense">+ Expense</span></button>
+          <button id="add-deposit">+ Deposit</button>
+          <button id="add-paycheck">+ Paycheck</button>
+          <div class="balance">
+            <span>Total Expenses: $</span>
+            <span id="expenses_total"></span>
+            <span>Total Deposits $</span>
+            <span id="deposits_total"></span>
+          </div>
+          <table id='expenseTable' width="100%">
+          </table>
+          <div id='expenseDialog' class='dialog ui-helper-hidden'>
+            <form id='expense'>
+            </form>
+            <table id="unpaidTimecards"></table>
+          </div>
         </div>
       </div>
     </div>

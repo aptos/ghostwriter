@@ -73,9 +73,9 @@ $(function () {
           }
         }
       });
-      expenses = expenses.formatMoney(2, '.', ',');
+      expenses = expenses.formatMoney();
       $('#expenses_total').text(expenses);
-      deposits = deposits.formatMoney(2, '.', ',');
+      deposits = deposits.formatMoney();
       $('#deposits_total').text(deposits);
     },
     select: function(e){

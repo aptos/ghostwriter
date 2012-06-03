@@ -16,7 +16,7 @@ $(function () {
       this.collection.bind('add', this.addOne);
       this.collection.bind('change', this.change);
       this.collection.bind('destroy', this.destroy);
-      this.collection.bind('all', this.test);
+      this.collection.bind('all', this.unpaidBalance);
 
       this.timecardView = new App.View.TimecardView();
     },
@@ -91,6 +91,17 @@ $(function () {
         }
       });
       return unpaidTimecardList;
+    },
+    unpaidBalance: function() {
+      console.info("unpaidBalance")
+      var unpaid = 0.0;
+      _.each(this.collection.models, function(model){
+        if(!model.attributes.paid){
+          unpaid = unpaid + model.attributes.payment;
+        }
+      });
+      unpaid = unpaid.formatMoney();
+      $('#unpaid_total').text(unpaid);
     },
     payTimecards: function(id_list){
       var self = this;
