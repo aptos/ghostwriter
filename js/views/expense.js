@@ -26,32 +26,50 @@ $(function () {
       $("#expense").html(this.templateForm());
 
       $( "#datepicker" ).datepicker();
-
+      $("#unpaidTimecards").empty();
+      var category = 'miscellaneous';
+      this.updateAvailableVendors();
       if (type == 'Expense') {
         $('.expense').show();
-        this.$('select[name=category]').val('miscellaneous');
-        this.updateAvailableVendors();
       } else if (type == 'Deposit') {
-        this.$('select[name=category]').val('deposit');
+        category = 'deposit';
         $('.expense').hide();
       } else if (type == 'Paycheck'){
-        this.$('select[name=category]').val('labor');
-        var unpaidTimecardList = timecards_view.unpaidTimecards();
-        if (unpaidTimecardList.length){
-          _.each(unpaidTimecardList, function(timecard){
-            $("#unpaidTimecards").append("<tr class='timecard_row'><td>" +
-              timecard.title + "</td></tr>");
-          });
-        }
+        category = 'labor';
+        var timecardTotal = this.timecardDetails();
       };
-      console.log(this.el.html())
       this.el.dialog({
         modal: true,
         title: (this.model.isNew() ? 'New' : 'Edit') + ' ' + type,
         buttons: buttons,
         open: this.open
       });
+      if (this.model.isNew()) {
+        this.$('select[name=category]').val(category);
+        if(timecardTotal){
+          this.$('input[name=amount]').val(timecardTotal);
+        }
+      }
       return this;
+    },
+    timecardDetails: function() {
+      console.info('timecardDetails')
+      var unpaidTimecardList = timecards_view.unpaidTimecards();
+      var timecardTotal = 0.0;
+      var id_list = [];
+      if (unpaidTimecardList.length){
+        _.each(unpaidTimecardList, function(timecard){
+          id_list.push(timecard._id);
+          timecardTotal = timecardTotal + timecard.payment;
+          $("#unpaidTimecards").append(
+            "<tr class='timecard_row' id=" +
+            timecard._id + ">" +
+            "<td>" + timecard.title + "</td>" +
+            "<td>" + formatDate(timecard.start) + "</td></tr>");
+        });
+      }
+      this.model.id_list = id_list;
+      return timecardTotal;
     },
     updateAvailableVendors: function() {
       // Setup autocomplete list from vendor list in the collection
@@ -86,6 +104,9 @@ $(function () {
         this.model.save({}, {
           success: this.close
         });
+      }
+      if (this.model.id_list) {
+        timecards_view.payTimecards(this.model.id_list);
       }
     },
     close: function() {

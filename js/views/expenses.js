@@ -30,13 +30,10 @@ $(function () {
       console.info(data);
     },
     newExpense:function (event) {
-      
-      console.info("newExpense!1123")
-      
+      console.info("newExpense!")
       var expenseView = new App.View.ExpenseView();
       expenseView.collection = this.collection;
       expenseView.model = new App.Model.Expense();
-      console.log(expenseView.el)
       expenseView.render('Expense');
       return false;
     },
@@ -65,15 +62,21 @@ $(function () {
       this.updateBalance();
     },
     updateBalance: function(){
-      var balance = 0.0;
-      var amount = 0.0
+      var expenses = 0.0,
+      deposits = 0.0;
       _.each(this.collection.models, function(model){
         if(model.attributes.amount){
-          balance = balance + parseFloat(model.attributes.amount);
+          if (model.attributes.category == 'deposit'){
+            deposits = deposits + parseFloat(model.attributes.amount);
+          } else {
+            expenses = expenses + parseFloat(model.attributes.amount);
+          }
         }
       });
-      balance = balance.formatMoney(2, '.', ',');
-      $('#balance').text(balance)
+      expenses = expenses.formatMoney(2, '.', ',');
+      $('#expenses_total').text(expenses);
+      deposits = deposits.formatMoney(2, '.', ',');
+      $('#deposits_total').text(deposits);
     },
     select: function(e){
       console.info(e.currentTarget)

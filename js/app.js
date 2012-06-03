@@ -17,7 +17,7 @@ $(function(){
     'js/views/expenses.js',
     'js/views/timecard.js',
     'js/views/timecards.js',
-    
+    'js/common.js'
     ];
 
     App.get_script = function(scripts, cb){

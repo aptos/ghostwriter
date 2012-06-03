@@ -76,6 +76,10 @@
       <div class="expense">
         <label>Vendor:</label>
         <input id="vendor" name='vendor' class="field" type="text" />
+        <label>Description:</label>
+        <input name='description' class="field" type="text" />
+      </div>
+      <div>
         <div>
           <label>Category:</label>
           <select name='category' class="field" type="select">
@@ -84,10 +88,6 @@
             <% }); %>
           </select>
         </div>
-        <label>Description:</label>
-        <input name='description' class="field" type="text" />
-      </div>
-      <div>
         <label>Account:</label>
         <select name='account' class="field" type="select">
           <% _.each(window.config.accounts,function(value,key){ %>
@@ -115,8 +115,10 @@
         <button id="add-deposit">+ Deposit</button>
         <button id="add-paycheck">+ Paycheck</button>
         <div class="balance">
-          <span>Current Balance: $</span>
-          <span id="balance" />
+          <span>Total Expenses: $</span>
+          <span id="expenses_total"></span>
+          <span>Total Deposits $</span>
+          <span id="deposits_total"></span>
         </div>
         <table id='expenseTable' width="100%">
         </table>

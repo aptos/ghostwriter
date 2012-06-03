@@ -82,7 +82,7 @@ $(function () {
     destroy: function(timecard) {
       this.el.fullCalendar('removeEvents', timecard.id);
     },
-    unpaidTimecards: function(pay) {
+    unpaidTimecards: function() {
       console.info('unpaid timecards')
       var unpaidTimecardList = [];
       _.each(this.collection.models, function(model){
@@ -91,6 +91,14 @@ $(function () {
         }
       });
       return unpaidTimecardList;
+    },
+    payTimecards: function(id_list){
+      var self = this;
+      _.each(id_list, function(id) {
+        self.collection.get(id).save({
+          paid: true
+        });
+      });
     }
   });
 

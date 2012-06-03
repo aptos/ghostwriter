@@ -27,12 +27,6 @@ $(function () {
       var pay_span = ($('input[name=paid]').is(':checked')) ? '(paid)' : '(unpaid)';
       $("input[name=paid] + span").text(pay_span);
     },
-    formatDate: function(date){
-      if(typeof(date) == 'string'){
-        date = date.replace(/T.*/,'');
-      }
-      return date ;
-    },
     render: function() {
       var buttons = {
         'Ok': this.save
@@ -57,7 +51,7 @@ $(function () {
     },
     open: function() {
       var this_model = this.model
-      var startDate = this.formatDate(this_model.get('start'));
+      var startDate = formatDate(this_model.get('start'));
       this.$('#start').text(startDate);
       this.$(":input").each( function(){
         $(this).val(this_model.get($(this).attr('name')))
