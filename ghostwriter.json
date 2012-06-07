@@ -30,6 +30,7 @@
         "worker": 12
       },
       "expense_columns": [
+        "id",
         "Date",
         "Vendor",
         "Category",

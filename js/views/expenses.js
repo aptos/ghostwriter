@@ -16,6 +16,8 @@ $(function () {
       _.bindAll(this);
       this.collection.bind('add', this.addOne);
       this.collection.bind('select', this.select);
+      this.collection.bind('destroy', this.destroy);
+      this.collection.bind('change', this.change);
       this.collection.bind('all', this.test);
 
       this.expenseView = new App.View.ExpenseView();
@@ -24,7 +26,8 @@ $(function () {
       'click #add-expense': 'newExpense',
       'click #add-deposit': 'newDeposit',
       'click #add-paycheck': 'newPaycheck',
-      'click #expenseTable tbody tr': 'select'
+      'click #expenseTable tbody tr': 'select',
+      'dblclick #expenseTable tbody tr': 'edit'
     },
     test: function(data){
       console.info(data);
@@ -54,12 +57,27 @@ $(function () {
       return false;
     },
     addOne: function(expense) {
-      var expenseRow = [];
-      $.each(expense.attributes, function(key, value){
-        expenseRow.push(value);
+      var expenseRow = [expense.attributes._id];
+      _.each(config.expense_columns, function(value){
+        if (value != 'id'  ){
+          expenseRow.push(expense.attributes[value.toLowerCase()])
+        }
       });
       $('#expenseTable').dataTable().fnAddData(expenseRow);
       this.updateBalance();
+    },
+    change: function(expense) {
+      var expenseRow = [expense.attributes._id];
+      _.each(config.expense_columns, function(value){
+        if (value != 'id'  ){
+          expenseRow.push(expense.attributes[value.toLowerCase()])
+        }
+      });
+      $('#expenseTable').dataTable().fnUpdate(expenseRow, this.selected_row);
+      this.updateBalance();
+    },
+    destroy: function() {
+      this.expense_table.fnDeleteRow(this.selected_row);
     },
     updateBalance: function(){
       var expenses = 0.0,
@@ -79,7 +97,7 @@ $(function () {
       $('#deposits_total').text(deposits);
     },
     select: function(e){
-      console.info(e.currentTarget)
+      var data = this.expense_table.fnGetData(e.currentTarget)
       if ( $(e.currentTarget).hasClass('row_selected') ) {
         $(e.currentTarget).removeClass('row_selected');
       }
@@ -87,6 +105,12 @@ $(function () {
         this.expense_table.$('tr.row_selected').removeClass('row_selected');
         $(e.currentTarget).addClass('row_selected');
       }
+    },
+    edit: function(e) {
+      this.selected_row = e.currentTarget;
+      var data = this.expense_table.fnGetData(e.currentTarget)
+      this.expenseView.model = this.collection.get(data[0]);
+      this.expenseView.render('Expense');
     },
     render: function(){
       var viewScope = this;
@@ -98,24 +122,26 @@ $(function () {
           _.each(data.models, function(model){
             row = []
             $.each(model.attributes, function(key,value){
-              if(key != '_id' && key != '_rev') {
+              if(key != '_rev') {
                 row.push(value);
               }
             });
             myData.push(row);
           });
           viewScope.expense_table.dataTable({
-            "aaData": myData
+            "aaData": myData,
+            "aoColumnDefs": [
+            {
+              "bSearchable": false,
+              "bVisible": false,
+              "aTargets": [ 0 ]
+            }
+            ]
           });
           viewScope.updateBalance();
         }
       });
     }
   });
-
-  Number.prototype.formatMoney = function(c, d, t){
-    var n = this, c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "," : d, t = t == undefined ? "." : t, s = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-  };
   
 });

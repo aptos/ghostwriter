@@ -11,6 +11,9 @@ $(function () {
       _.bindAll(this);
     },
     render: function(type) {
+      if (this.model.collection){
+        this.collection = this.model.collection;
+      }
       var buttons = {
         'Ok': this.save
       };
@@ -72,6 +75,7 @@ $(function () {
       return timecardTotal;
     },
     updateAvailableVendors: function() {
+      console.info('updateAvailableVendors')
       // Setup autocomplete list from vendor list in the collection
       var attrs = _.pluck(this.collection.models,'attributes');
       var vendors = _.pluck(attrs,'vendor');
