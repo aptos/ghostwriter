@@ -26,8 +26,8 @@ $(function () {
       'click #add-expense': 'newExpense',
       'click #add-deposit': 'newDeposit',
       'click #add-paycheck': 'newPaycheck',
-      'click #expenseTable tbody tr': 'select',
-      'dblclick #expenseTable tbody tr': 'edit'
+      'hover #expenseTable tbody tr': 'select',
+      'click #expenseTable tbody tr': 'edit'
     },
     test: function(data){
       console.info(data);
